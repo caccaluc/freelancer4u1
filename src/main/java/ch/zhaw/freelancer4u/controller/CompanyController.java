@@ -32,7 +32,7 @@ public class CompanyController {
     }
 
     @GetMapping("/company")
-    public ResponseEntity<List<Company>> getAllFreelancer() {
+    public ResponseEntity<List<Company>> getAllCompany() {
         List<Company> allCompanies = companyRepository.findAll();
         return new ResponseEntity<>(allCompanies, HttpStatus.OK);
     }
