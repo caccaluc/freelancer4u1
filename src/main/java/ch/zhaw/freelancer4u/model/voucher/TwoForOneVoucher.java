@@ -1,14 +1,13 @@
 package ch.zhaw.freelancer4u.model.voucher;
 
-
 import java.util.List;
 
 import ch.zhaw.freelancer4u.model.Job;
 import ch.zhaw.freelancer4u.model.JobType;
 
-
 public class TwoForOneVoucher implements Voucher {
-    private JobType jobType;
+
+    JobType jobType;
 
     public TwoForOneVoucher(JobType jobType) {
         this.jobType = jobType;
@@ -16,14 +15,12 @@ public class TwoForOneVoucher implements Voucher {
 
     @Override
     public double getDiscount(List<Job> jobs) {
-        long count = jobs.stream().filter(job -> job.getJobType() == jobType).count();
-        double discount = jobs.stream()
-            .filter(job -> job.getJobType() == jobType)
-            .mapToDouble(Job::getEarnings)
-            .sorted()
-            .limit(count / 2)
-            .sum();
-        return discount;
-        
+        var filteredJobs = jobs.stream().filter(p -> this.jobType.equals(p.getJobType())).toList();
+        var sum = filteredJobs.stream().mapToDouble(p -> p.getEarnings()).sum();
+        if (filteredJobs.size() <=1) {
+            return 0;
+        }
+        return sum / 2;
     }
+
 }

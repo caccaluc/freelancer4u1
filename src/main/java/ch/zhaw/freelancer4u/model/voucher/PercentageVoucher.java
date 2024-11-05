@@ -4,19 +4,18 @@ import java.util.List;
 
 import ch.zhaw.freelancer4u.model.Job;
 
+public class PercentageVoucher implements Voucher {
 
-    public class PercentageVoucher implements Voucher {
-    private int discountPercentage;
+    private int discount = 0;
 
     public PercentageVoucher(int discount) {
-        this.discountPercentage = discount;
+        this.discount = discount;
     }
 
     @Override
     public double getDiscount(List<Job> jobs) {
-        if (jobs.isEmpty()) return 0.0;
-        double totalEarnings = jobs.stream().mapToDouble(Job::getEarnings).sum();
-        return (totalEarnings * discountPercentage) / 100.0;
+        var totalPrice = jobs.stream().mapToDouble(p -> p.getEarnings()).sum();
+        return totalPrice * ((double) discount / 100);
     }
+
 }
-    
