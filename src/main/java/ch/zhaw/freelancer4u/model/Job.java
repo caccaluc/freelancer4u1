@@ -15,16 +15,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Document("job")
 public class Job {
-    public Job(double d) {
-        this.earnings = d;
-    }
-
-    public double getEarnings() {
-        return this.earnings;
-    }
-    public Job(int i, JobType implement) {
-        
-    }
     @Id
     private String id;
     @NonNull

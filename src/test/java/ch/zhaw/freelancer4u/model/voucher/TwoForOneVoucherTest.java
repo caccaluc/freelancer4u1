@@ -13,7 +13,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import ch.zhaw.freelancer4u.model.Job;
 import ch.zhaw.freelancer4u.model.JobType;
 
-// XXX Aufgabe 6c)
+//  Aufgabe 6c)
 public class TwoForOneVoucherTest {
 
     @Test
@@ -25,7 +25,7 @@ public class TwoForOneVoucherTest {
         var jobs = new ArrayList<Job>();
         jobs.add(job1);
         jobs.add(job2);
-
+        assertEquals(0, voucher.getDiscount(jobs), 0.01);
         assertEquals(0, voucher.getDiscount(jobs), 0.01);
     }
 

@@ -19,13 +19,12 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 public class SpaConfiguration implements WebMvcConfigurer {
 
     @Override
-    public void addResourceHandlers(@SuppressWarnings("null") ResourceHandlerRegistry registry) {
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
             .addResourceHandler("/**")
             .addResourceLocations("classpath:/static/")
             .resourceChain(true)
             .addResolver(new PathResourceResolver() {
-                @SuppressWarnings("null")
                 @Override
                 protected Resource getResource(String resourcePath, Resource location) throws IOException {
                     Resource requestedResource = location.createRelative(resourcePath);
@@ -36,7 +35,7 @@ public class SpaConfiguration implements WebMvcConfigurer {
     }
 
     @Override
-    public void addViewControllers(@SuppressWarnings("null") ViewControllerRegistry registry) {
+    public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("forward:/index.html");
     }
 }

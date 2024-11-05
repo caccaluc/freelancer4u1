@@ -12,7 +12,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import ch.zhaw.freelancer4u.model.Job;
 import ch.zhaw.freelancer4u.model.JobType;
 
-// XXX Aufgabe 6b)
+//  Aufgabe 6b)
 public class PercentageVoucherTest {
 
     @Test
