@@ -1,9 +1,13 @@
 package ch.zhaw.freelancer4u.model.voucher;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,7 +16,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import ch.zhaw.freelancer4u.model.Job;
 import ch.zhaw.freelancer4u.model.JobType;
 
-//  Aufgabe 6b)
+// Aufgabe 6b)
 public class PercentageVoucherTest {
 
     @Test
@@ -37,5 +41,26 @@ public class PercentageVoucherTest {
 
         assertEquals(49.98, voucher.getDiscount(Arrays.asList(job1, job2)), 0.01);
     }
+
+    // Aufgabe 7b
+    @Test
+    public void testDiscountGreaterThan50() {
+        assertThrows(RuntimeException.class, () -> new PercentageVoucher(51));
+    }
+    
+    @Test
+    public void testDiscountLessThanOrEqualToZero() {
+        assertThrows(RuntimeException.class, () -> new PercentageVoucher(0));
+    }
+
+    @Test
+    public void testValidDiscount() {
+        PercentageVoucher voucher = new PercentageVoucher(25);
+        assertEquals(25, voucher.getDiscountPercentage());
+    }
+
+
+
+    
 
 }

@@ -8,7 +8,15 @@ public class PercentageVoucher implements Voucher {
 
     private int discount = 0;
 
+
+    //Aufgabe 7a
     public PercentageVoucher(int discount) {
+        if (discount > 50) {
+            throw new RuntimeException("Error: Discount value must less or equal 50.");
+        }
+        if (discount <= 0) {
+            throw new RuntimeException("Error: Discount value must be greater zero.");
+        }
         this.discount = discount;
     }
 
@@ -18,4 +26,9 @@ public class PercentageVoucher implements Voucher {
         return totalPrice * ((double) discount / 100);
     }
 
+    public int getDiscountPercentage() {
+
+        return discount;
+
+    }
 }
