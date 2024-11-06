@@ -1,7 +1,7 @@
 name: Build and deploy a container to an Azure Web App
 
 env:
-    AZURE_WEBAPP_NAME: zhaw-exercise-luca
+    AZURE_WEBAPP_NAME: zhaw-exercice-luca
 
 on:
     push:
@@ -37,7 +37,7 @@ jobs:
                   push: true
                   tags: ghcr.io/${{ env.REPO }}:${{ github.sha }}
                   file: ./Dockerfile
-                  
+
 
     deploy:
         permissions:
