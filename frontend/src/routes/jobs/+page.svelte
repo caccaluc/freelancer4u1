@@ -5,6 +5,13 @@
 
   const api_root = $page.url.origin;
 
+  let currentPage; 
+  let nrOfPages = 0; 
+  let defaultPageSize = 30; 
+
+  let earningsMin; 
+  let jobType; 
+
   let jobs = [];
   let job = {
     description: null,
@@ -18,15 +25,27 @@
   });
 
   function getJobs() {
+
+    let query = "?page=" + currentPage + "&size=" + defaultPageSize;
+
+    if (earningsMin) {
+      query += "&min=" + earningsMin;
+    }
+    if (jobType && jobType !== "ALL") {
+      query += "&type=" + jobType;
+    }
+
     var config = {
       method: "get",
-      url: api_root + "/api/job",
+      url: api_root + "/api/job" + query,
       headers: {},
     };
 
     axios(config)
       .then(function (response) {
-        jobs = response.data;
+        jobs = response.data.content;
+
+        nrOfPages = response.data.totalPages; 
       })
       .catch(function (error) {
         alert("Could not get jobs");
@@ -128,3 +147,19 @@
     {/each}
   </tbody>
 </table>
+
+<nav>
+  <ul class="pagination">
+    {#each Array(nrOfPages) as _, i}
+      <li class="page-item">
+        <a
+          class="page-link"
+          class:active={currentPage == i + 1}
+          href={"/jobs?page=" + (i + 1)}
+        >
+          {i + 1}
+        </a>
+      </li>
+    {/each}
+  </ul>
+</nav>
