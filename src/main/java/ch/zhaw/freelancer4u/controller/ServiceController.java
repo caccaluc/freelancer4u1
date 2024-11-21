@@ -30,6 +30,11 @@ public class ServiceController {
 
     @PutMapping("/assignjob")
     public ResponseEntity<Job> assignJob(@RequestBody JobStateChangeDTO changeS) {
+        // Überprüfe, ob der Benutzer die Rolle 'admin' hat
+        if (!roleService.userHasRole("admin")) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
         String freelancerId = changeS.getFreelancerId();
         String jobId = changeS.getJobId();
         Optional<Job> job = jobService.assignJob(jobId, freelancerId);
@@ -41,6 +46,11 @@ public class ServiceController {
 
     @PutMapping("/completejob")
     public ResponseEntity<Job> completeJob(@RequestBody JobStateChangeDTO changeS) {
+        // Überprüfe, ob der Benutzer die Rolle 'admin' hat
+        if (!roleService.userHasRole("admin")) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
         String freelancerId = changeS.getFreelancerId();
         String jobId = changeS.getJobId();
         Optional<Job> job = jobService.completeJob(jobId, freelancerId);
