@@ -18,7 +18,6 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 @Configuration
 public class SpaConfiguration implements WebMvcConfigurer {
 
-    @SuppressWarnings("null")
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
@@ -35,7 +34,6 @@ public class SpaConfiguration implements WebMvcConfigurer {
             });
     }
 
-    @SuppressWarnings("null")
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("forward:/index.html");

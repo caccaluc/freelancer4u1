@@ -2,8 +2,13 @@
   import axios from "axios";
   import { page } from "$app/stores";
   import { onMount } from "svelte";
+  import { jwt_token } from "../../store";
 
   const api_root = $page.url.origin;
+
+  let currentPage;
+  let nrOfPages = 0;
+  let defaultPageSize = 20;
 
   let companies = [];
   let company = {
@@ -11,20 +16,37 @@
     email: null,
   };
 
-  onMount(() => {
+  $: {
+    if ($jwt_token !== "") {
+      let searchParams = $page.url.searchParams;
+
+      if (searchParams.has("page")) {
+        currentPage = searchParams.get("page");
+      } else {
+        currentPage = "1";
+      }
+      getCompanies();
+    }
+  }
+
+/*   onMount(() => {
     getCompanies();
-  });
+  }); */
 
   function getCompanies() {
+
+    let query = "?pageSize=" + defaultPageSize + "&pageNumber=" + currentPage;
+
     var config = {
       method: "get",
-      url: api_root + "/api/company",
-      headers: {},
+      url: api_root + "/api/company" + query,
+      headers: {Authorization: "Bearer "+$jwt_token},
     };
 
     axios(config)
       .then(function (response) {
-        companies = response.data;
+        companies = response.data.content;
+        nrOfPages = response.data.totalPages;
       })
       .catch(function (error) {
         alert("Could not get companies");
@@ -38,6 +60,7 @@
       url: api_root + "/api/company",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer "+$jwt_token,
       },
       data: company,
     };
@@ -102,3 +125,17 @@
     {/each}
   </tbody>
 </table>
+<nav>
+  <ul class="pagination">
+    {#each Array(nrOfPages) as _, i}
+      <li class="page-item">
+        <a
+          class="page-link"
+          class:active={currentPage == i + 1}
+          href={"/companies?page=" + (i + 1)}
+          >{i + 1}
+        </a>
+      </li>
+    {/each}
+  </ul>
+</nav>

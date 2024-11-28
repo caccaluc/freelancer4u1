@@ -4,9 +4,7 @@
   import auth from "../auth.service";
 </script>
 
-Variablen aus dem store auth-service für Login- und Logout-Funktion <nav
-  class="navbar navbar-expand-lg bg-light"
->
+<nav class="navbar navbar-expand-lg bg-light">
   <div class="container-fluid">
     <a class="navbar-brand" href="/">Freelancer4U</a>
     <button
@@ -22,7 +20,7 @@ Variablen aus dem store auth-service für Login- und Logout-Funktion <nav
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        {#if $isAuthenticated}
+        {#if $isAuthenticated && $user.user_roles  && $user.user_roles.includes("admin")}
           <li class="nav-item">
             <a class="nav-link" aria-current="page" href="/companies"
               >Companies</a
@@ -30,7 +28,14 @@ Variablen aus dem store auth-service für Login- und Logout-Funktion <nav
           </li>
         {/if}
         {#if $isAuthenticated}
-          <li class="nav-item"><a class="nav-link" href="/jobs">Jobs</a></li>
+          <li class="nav-item">
+            <a class="nav-link" href="/jobs">Jobs</a>
+          </li>
+        {/if}
+        {#if $isAuthenticated}
+          <li class="nav-item">
+            <a class="nav-link" href="/account">Account</a>
+          </li>
         {/if}
       </ul>
       <div class="d-flex">

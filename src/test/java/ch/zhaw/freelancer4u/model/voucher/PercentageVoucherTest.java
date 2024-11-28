@@ -2,12 +2,11 @@ package ch.zhaw.freelancer4u.model.voucher;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,7 +15,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import ch.zhaw.freelancer4u.model.Job;
 import ch.zhaw.freelancer4u.model.JobType;
 
-// Aufgabe 6b)
+// XXX Aufgabe 6b)
 public class PercentageVoucherTest {
 
     @Test
@@ -42,25 +41,44 @@ public class PercentageVoucherTest {
         assertEquals(49.98, voucher.getDiscount(Arrays.asList(job1, job2)), 0.01);
     }
 
-    // Aufgabe 7b
+    // XXX Aufgabe 7c)
     @Test
-    public void testDiscountGreaterThan50() {
-        assertThrows(RuntimeException.class, () -> new PercentageVoucher(51));
-    }
-    
-    @Test
-    public void testDiscountLessThanOrEqualToZero() {
-        assertThrows(RuntimeException.class, () -> new PercentageVoucher(0));
-    }
+    public void testVoucher_withJobs_Mock() {
+        var voucher = new PercentageVoucher(42);
 
-    @Test
-    public void testValidDiscount() {
-        PercentageVoucher voucher = new PercentageVoucher(25);
-        assertEquals(25, voucher.getDiscountPercentage());
+        var job1 = mock(Job.class);
+        var job2 = mock(Job.class);
+        when(job1.getEarnings()).thenReturn(77.0);
+        when(job2.getEarnings()).thenReturn(42.0);
+
+        assertEquals(49.98, voucher.getDiscount(Arrays.asList(job1, job2)), 0.01);
     }
 
+    // XXX Aufgabe 7b)
+    @Test
+    public void testVoucher_belowOrEqualZero() {
+        var exception1 = assertThrows(RuntimeException.class, () -> {
+            new PercentageVoucher(0);
+        });
+        assertEquals(PercentageVoucher.errorMessageGreaterZero, exception1.getMessage());
+        var exception2 = assertThrows(RuntimeException.class, () -> {
+            new PercentageVoucher(-5);
+        });
+        assertEquals(PercentageVoucher.errorMessageGreaterZero, exception2.getMessage());
+    }
 
+    // XXX Aufgabe 7b)
+    @Test
+    public void testVoucher_greater50() {
+        var exception1 = assertThrows(RuntimeException.class, () -> {
+            new PercentageVoucher(51);
+        });
+        assertEquals(PercentageVoucher.errorMessage50, exception1.getMessage());
 
-    
+        var exception2 = assertThrows(RuntimeException.class, () -> {
+            new PercentageVoucher(120);
+        });
+        assertEquals(PercentageVoucher.errorMessage50, exception2.getMessage());
+    }
 
 }
