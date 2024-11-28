@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,7 +58,8 @@ public class JobController {
             allJobs = jobRepository.findAll(PageRequest.of(pageNumber - 1, pageSize));
         } else {
             if (min != null && type != null) {
-                allJobs = jobRepository.findByJobTypeAndEarningsGreaterThan(type, min, PageRequest.of(pageNumber - 1, pageSize));
+                allJobs = jobRepository.findByJobTypeAndEarningsGreaterThan(type, min,
+                        PageRequest.of(pageNumber - 1, pageSize));
             } else if (min != null) {
                 allJobs = jobRepository.findByEarningsGreaterThan(min, PageRequest.of(pageNumber - 1, pageSize));
             } else {
@@ -66,5 +68,14 @@ public class JobController {
         }
         return new ResponseEntity<>(allJobs, HttpStatus.OK);
 
+    }
+
+    @DeleteMapping("/job")
+    public ResponseEntity<String> deleteAllJobs() {
+        if (!roleService.userHasRole("admin")) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        jobRepository.deleteAll();
+        return ResponseEntity.status(HttpStatus.OK).body("DELETED");
     }
 }

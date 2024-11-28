@@ -29,3 +29,6 @@ if (sessionToken) {
     // create the key "jwt_token" in the session storage if it doesn't exist yet
     sessionStorage.setItem("jwt_token", "");
 }
+
+// update the jwt_token in the sessionStorage on changes 
+jwt_token.subscribe(jwt_token => sessionStorage.setItem("jwt_token", jwt_token)); 

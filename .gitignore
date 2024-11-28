@@ -34,3 +34,7 @@ build/
 
 ### Frontend build ###
 /src/main/resources/static/
+
+
+### Cypress ### 
+**/cypress.env.json 
