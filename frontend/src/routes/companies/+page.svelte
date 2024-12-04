@@ -29,6 +29,31 @@
     }
   }
 
+// API
+function validateEmailAndCreateCompany() {
+  var config = {
+    method: "get",
+    url: "https://disify.com/api/email/" + company.email,
+  };
+
+  axios(config)
+    .then(function (response) {
+      console.log("Validated email " + company.email);
+      console.log(response.data);
+      if (response.data.format && !response.data.disposable && response.data.dns) {
+        createCompany();
+      } else {
+        alert("Email " + company.email + " is not valid.");
+      }
+    })
+    .catch(function (error) {
+      alert("Could not validate email");
+      console.log(error);
+    });
+}
+
+
+
 /*   onMount(() => {
     getCompanies();
   }); */
@@ -101,7 +126,7 @@
       />
     </div>
   </div>
-  <button type="button" class="btn btn-primary" on:click={createCompany}
+  <button type="button" class="btn btn-primary" on:click={validateEmailAndCreateCompany}
     >Submit</button
   >
 </form>

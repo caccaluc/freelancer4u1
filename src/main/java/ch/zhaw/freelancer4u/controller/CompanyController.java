@@ -18,11 +18,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ch.zhaw.freelancer4u.model.Company;
 import ch.zhaw.freelancer4u.model.CompanyCreateDTO;
 import ch.zhaw.freelancer4u.repository.CompanyRepository;
+import ch.zhaw.freelancer4u.service.MailValidatorService;
 import ch.zhaw.freelancer4u.service.RoleService;
 
 @RestController
 @RequestMapping("/api")
 public class CompanyController {
+
+    @Autowired 
+    MailValidatorService mailValidatorService; 
+    
     @Autowired
     CompanyRepository companyRepository;
 
@@ -31,14 +36,19 @@ public class CompanyController {
 
     @PostMapping("/company")
     public ResponseEntity<Company> createCompany(
-            @RequestBody CompanyCreateDTO fDTO) {
+        @RequestBody CompanyCreateDTO fDTO) {
         if (!roleService.userHasRole("admin")) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        if (!mailValidatorService.validateEmail(fDTO.getEmail()).isValidEmail()) {
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Company fDAO = new Company(fDTO.getName(), fDTO.getEmail());
         Company f = companyRepository.save(fDAO);
         return new ResponseEntity<>(f, HttpStatus.CREATED);
     }
+
+   
 
     @GetMapping("/company")
     public ResponseEntity<Page<Company>> getAllCompany(

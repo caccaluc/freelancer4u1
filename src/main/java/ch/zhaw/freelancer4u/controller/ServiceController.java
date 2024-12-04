@@ -19,6 +19,7 @@ import ch.zhaw.freelancer4u.service.JobService;
 import ch.zhaw.freelancer4u.service.RoleService;
 import ch.zhaw.freelancer4u.service.UserService;
 import ch.zhaw.freelancer4u.repository.JobRepository;
+import ch.zhaw.freelancer4u.service.MailService;
 
 @RestController
 @RequestMapping("/api/service")
@@ -35,6 +36,9 @@ public class ServiceController {
 
     @Autowired
     UserService userService;
+    
+    @Autowired
+    MailService mailService;
 
     @PutMapping("/assignjob")
     public ResponseEntity<Job> assignJob(@RequestBody JobStateChangeDTO changeS) {
@@ -69,24 +73,33 @@ public class ServiceController {
         return jobRepository.getJobStateAggregation(company);
     }
 
-    @PutMapping("/me/assignjob")
-    public ResponseEntity<Job> assignToMe(@RequestParam String jobId) {
-        String userEmail = userService.getEmail();
-        Optional<Job> job = jobService.assignJob(jobId, userEmail);
-        if (job.isPresent()) {
-            return new ResponseEntity<>(job.get(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
+    
 
-    @PutMapping("/me/completejob")
-    public ResponseEntity<Job> completeMyJob(@RequestParam String jobId) {
-        String userEmail = userService.getEmail();
-        Optional<Job> job = jobService.completeJob(jobId, userEmail);
-        if (job.isPresent()) {
-            return new ResponseEntity<>(job.get(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
+private void sendJobStatusEmail(String email, Job job) {
+    String subject = "Job Status Update";
+    String body = "The status of your job with ID " + job.getId() + " has been updated to " + job.getStatus() + ".";
+    mailService.sendMail(email, subject, body);
+}
 
+@PutMapping("/me/assignjob")
+public ResponseEntity<Job> assignToMe(@RequestParam String jobId) {
+    String userEmail = userService.getEmail();
+    Optional<Job> job = jobService.assignJob(jobId, userEmail);
+    if (job.isPresent()) {
+        sendJobStatusEmail(userEmail, job.get());
+        return new ResponseEntity<>(job.get(), HttpStatus.OK);
+    }
+    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+}
+
+@PutMapping("/me/completejob")
+public ResponseEntity<Job> completeMyJob(@RequestParam String jobId) {
+    String userEmail = userService.getEmail();
+    Optional<Job> job = jobService.completeJob(jobId, userEmail);
+    if (job.isPresent()) {
+        sendJobStatusEmail(userEmail, job.get());
+        return new ResponseEntity<>(job.get(), HttpStatus.OK);
+    }
+    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+}
 }
